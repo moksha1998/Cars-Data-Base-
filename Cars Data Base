@@ -1,0 +1,77 @@
+import pandas as pd
+
+from google.colab import files
+
+
+uploaded = files.upload()
+
+df =pd.read_table('car data (4).txt')
+
+df
+
+
+df ['Car_Name']
+
+df.describe()
+
+df.columns
+
+fname = df['Car_Name'].unique()
+
+
+fname
+
+
+fsize = df.groupby(df['Car_Name'],sort = False ).size()
+
+fsize
+
+print(type(fsize))
+
+print(type(fname))
+
+import matplotlib.pyplot as plt
+plt.bar(fname,fsize,color = ['r','b','c','m'])
+plt.title('cars vs count')
+plt.xlabel('cars')
+plt.ylabel('count')
+plt.show()
+
+x = df.iloc[:,[2,3,4]].values
+y = df.iloc[:,7].values
+print (x,y)
+
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test = train_test_split(x,y,random_state = 6)
+
+print(x_train.shape)
+print(x_test.shape)
+print(y_train.shape)
+print(y_test.shape)
+
+
+from sklearn.preprocessing import MinMaxScaler # Range 0 to 1
+scaler = MinMaxScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
+
+x_train
+
+print(x_train.shape)
+print(x_test.shape)
+
+from sklearn.neighbors import KNeighborsClassifier
+model = KNeighborsClassifier(n_neighbors = 7,metric = 'euclidean')
+
+model.fit(x_train,y_train)
+
+y_pred = model.predict(x_test)
+
+y_pred
+
+
+y_test
+
+from sklearn.metrics import accuracy_score
+
+accuracy_score(y_test,y_pred)*100
